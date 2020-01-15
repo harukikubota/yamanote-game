@@ -1,24 +1,33 @@
 # README
+pleiadesを使用したサンプルアプリ。
+山手線ゲームで遊べる。
+## install
+    $ git clone git@github.com:harukikubota/yamanote-game.git
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+    $ cd yamanote-game
 
-Things you may want to cover:
+    $ bundle install
 
-* Ruby version
+## setup
+    $ rake db:create && rake db:migrate && rake db:seed
 
-* System dependencies
+    # サーバ環境に合わせたファイル名にする
+    $ vi .env.development
+    LINE_CHANNEL_TOKEN='put your key.'
+    LINE_CHANNEL_SECRET='put your key.'
 
-* Configuration
+## start
+    $ rails server
 
-* Database creation
+## botとのトーク
+### テキストメッセージ
+#### ゲーム開始
+ゲームが開始されます。
 
-* Database initialization
+#### 駅名
+山手線駅名を送信することでゲームが進行します。
 
-* How to run the test suite
+botがNPCとして、まだ解答していない駅名を言います。
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+#### 終了
+ゲームが終了します。

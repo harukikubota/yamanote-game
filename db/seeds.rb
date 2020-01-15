@@ -1,7 +1,38 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+station_names =
+  %w[
+    東京
+    神田
+    秋葉原
+    御徒町
+    上野
+    鶯谷
+    日暮里
+    西日暮里
+    田端
+    駒込
+    巣鴨
+    大塚
+    池袋
+    目白
+    高田馬場
+    新大久保
+    新宿
+    代々木
+    原宿
+    渋谷
+    恵比寿
+    目黒
+    五反田
+    大崎
+    品川
+    田町
+    浜松町
+    新橋
+    有楽町
+  ]
+
+station_names.each do |name|
+  Station.create(
+    name: name
+  )
+end
