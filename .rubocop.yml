@@ -1,0 +1,7 @@
+Metrics/BlockLength:
+  Exclude:
+    - './spec/*/**.rb'
+
+Layout/LineLength:
+  Exclude:
+    - './spec/*/**.rb'

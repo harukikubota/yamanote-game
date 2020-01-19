@@ -21,9 +21,11 @@ class GameSession < ApplicationRecord
       create(user_id: user_id, answer_situation: default_answer_situation)
     end
 
+    private
+
     # 未解答、解答済みかどうかを変換する
     #
-    # @param [in<string || boolean>]
+    # @param [in<(string || integer) || boolean>]
     #
     # @return [out<string || boolean>] 引数と逆のクラス
     #   '0' <=> false
@@ -34,14 +36,12 @@ class GameSession < ApplicationRecord
       bit = [false, true]
 
       case param
-      when Integer
-        bit[param]
+      when Integer, String
+        bit[param.to_i]
       when TrueClass, FalseClass
         bit.index(param).to_s
       end
     end
-
-    private
 
     def default_answer_situation
       answer_bit * Station.count
@@ -51,8 +51,8 @@ class GameSession < ApplicationRecord
   # 駅ごとの情報を返す
   #
   # @return [answer_situation<Hash>, ...]
-  #   name: '東京',
-  #   romaji: 'tokyo',
+  #   id      : 1,
+  #   name    : '東京',
   #   answered: false
   #
   def stations_answer_situation
@@ -63,24 +63,16 @@ class GameSession < ApplicationRecord
                       {
                         id: stations[index].id,
                         name: stations[index].name,
-                        answered: convert_num_to_ans_flag(flag)
+                        answered: answer_bit(flag)
                       }
                     end
   end
 
-  # answer_situation の数値を変換する。
-  #
-  # @param  [number]     0   ||  1
-  # @return [answered] false || true
-  def convert_num_to_ans_flag(number)
-    [false, true][number.to_i]
-  end
-
   # 指定した駅が解答済みか？
   #
-  # @param [keyword] 名前 || ローマ字 || id
+  # @param [keyword] 名前 || id
   # @return [unanswered]
-  # @raise [NoMethodError] キーワードがStringであり、不正な文字な場合(正：tokyo, 誤：Tokyo)
+  # @raise [NoMethodError] キーワードが不正な場合(正：東京, 誤：高輪ゲートウェイ, nilなど)
   def unanswered_station?(keyword)
     station =
       case keyword
@@ -105,13 +97,6 @@ class GameSession < ApplicationRecord
     answer(station_id) && true
   end
 
-  # 解答数
-  def answered_count
-    stations_answer_situation.select do |hash|
-      hash[:answered]
-    end.count
-  end
-
   # 全て解答済み?
   def answered_all?
     stations_answer_situation.all? do |hash|
@@ -123,6 +108,8 @@ class GameSession < ApplicationRecord
     npc_ans_station = stations_answer_situation.select do |sta|
       sta[:answered] == false
     end.sample
+
+    return false unless npc_ans_station
 
     answer(npc_ans_station[:id])
     npc_ans_station[:name]
@@ -136,6 +123,6 @@ class GameSession < ApplicationRecord
   end
 
   def answer_bit(param)
-    self.class.answer_bit(param)
+    GameSession.__send__ :answer_bit, param
   end
 end

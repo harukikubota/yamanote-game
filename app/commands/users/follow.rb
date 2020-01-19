@@ -1,9 +1,14 @@
 module Users
   class Follow < BaseCommand
     def call
-      User.register(@event.source.user_id)
-      message = { type: :text, text: '友達登録ありがとうござます' }
-      client.reply_message(@event.reply_token, message)
+      message =
+        if user
+          'おかえりなさいませ'
+        else
+          User.register(@event.source.user_id)
+          '友達登録ありがとうござます'
+        end
+      client.reply_message(@event.reply_token, { type: :text, text: message })
     end
   end
 end

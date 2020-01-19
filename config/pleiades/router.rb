@@ -3,6 +3,8 @@ Pleiades::Command::Router.class_eval do
 end
 
 Pleiades::Command::Router.route do
+  return if @event.source.user_id == 'Udeadbeefdeadbeefdeadbeefdeadbeef'
+
   nest_blocks only_events: %i[follow unfollow], scope: 'users' do
     event action: __event_name__
     return
